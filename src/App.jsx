@@ -52,10 +52,7 @@ export default function App() {
         <div className="min-h-screen bg-slate-950 text-slate-100 font-sans flex flex-col items-center py-10 px-4 sm:px-8 overflow-hidden">
             {/* Header */}
             <div className="text-center max-w-3xl mb-12 relative z-10">
-                <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-indigo-500/10 border border-indigo-500/20 text-indigo-300 text-sm mb-4">
-                    <Sparkles size={16} />
-                    <span>Roomie Ecosystem</span>
-                </div>
+
                 <h1 className="text-4xl md:text-5xl font-bold mb-4 tracking-tight">Эволюция Гостевого Опыта</h1>
                 <p className="text-slate-400 text-lg">От первого касания до пожизненной лояльности через единое приложение.</p>
             </div>
