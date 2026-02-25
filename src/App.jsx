@@ -6,20 +6,25 @@ import PhoneMockup from './components/PhoneMockup/PhoneMockup';
 import CrmVisualizer from './components/CrmVisualizer';
 
 export default function App() {
+    const [isInitialLoading, setIsInitialLoading] = useState(true);
     const [activeStage, setActiveStage] = useState(0);
     const [isAnimating, setIsAnimating] = useState(false);
     const [preArrivalStep, setPreArrivalStep] = useState(0); // 0 = Login, 1 = Home, 2 = Services
 
     // Auto-play feature for Main Stages
     useEffect(() => {
+        if (isInitialLoading) return; // Wait until initial load is complete
+
         const timer = setInterval(() => {
             handleStageChange((prev) => (prev + 1) % stages.length);
         }, 12000); // Auto switch every 12 seconds
         return () => clearInterval(timer);
-    }, []);
+    }, [isInitialLoading]);
 
     // Internal timer for Pre-arrival screens
     useEffect(() => {
+        if (isInitialLoading) return; // Wait until initial load is complete
+
         if (activeStage === 0) {
             setPreArrivalStep(0);
             const timer1 = setTimeout(() => {
@@ -37,7 +42,15 @@ export default function App() {
         } else {
             setPreArrivalStep(0);
         }
-    }, [activeStage]);
+    }, [activeStage, isInitialLoading]);
+
+    // Initial Loading Timer
+    useEffect(() => {
+        const timer = setTimeout(() => {
+            setIsInitialLoading(false);
+        }, 2500);
+        return () => clearTimeout(timer);
+    }, []);
 
     const handleStageChange = (index) => {
         if (index === activeStage) return;
@@ -51,7 +64,7 @@ export default function App() {
     return (
         <div className="min-h-screen bg-slate-950 text-slate-100 font-sans flex flex-col items-center py-10 px-4 sm:px-8 overflow-hidden">
             {/* Header */}
-            <div className="text-center max-w-3xl mb-12 relative z-10">
+            <div className={`text-center max-w-3xl mb-12 relative z-10 transition-opacity duration-1000 ease-in-out ${isInitialLoading ? 'opacity-0' : 'opacity-100'}`}>
 
                 <h1 className="text-4xl md:text-5xl font-bold mb-4 tracking-tight">Эволюция Гостевого Опыта</h1>
                 <p className="text-slate-400 text-lg">От первого касания до пожизненной лояльности через единое приложение.</p>
@@ -59,7 +72,7 @@ export default function App() {
 
             <div className="w-full max-w-6xl grid grid-cols-1 lg:grid-cols-12 gap-12 relative z-10">
                 {/* Left Column: Timeline & Content */}
-                <div className="lg:col-span-5 flex flex-col justify-center space-y-8">
+                <div className={`lg:col-span-5 flex flex-col justify-center space-y-8 transition-opacity duration-1000 ease-in-out ${isInitialLoading ? 'opacity-0' : 'opacity-100'}`}>
                     <StageNavigation
                         stages={stages}
                         activeStage={activeStage}
@@ -77,28 +90,30 @@ export default function App() {
                 {/* Right Column: Visualizer (Phone & CRM) */}
                 <div className="lg:col-span-7 flex flex-col sm:flex-row items-center justify-center gap-8 lg:gap-16 relative">
                     {/* Background decorative glow */}
-                    <div className="absolute inset-0 bg-indigo-500/5 blur-[100px] rounded-full pointer-events-none"></div>
+                    <div className={`absolute inset-0 bg-indigo-500/5 blur-[100px] rounded-full pointer-events-none transition-opacity duration-1000 ease-in-out ${isInitialLoading ? 'opacity-0' : 'opacity-100'}`}></div>
 
-                    <PhoneMockup activeStage={activeStage} preArrivalStep={preArrivalStep} />
+                    <PhoneMockup activeStage={activeStage} preArrivalStep={preArrivalStep} scale={1.2} isInitialLoading={isInitialLoading} />
 
                     {/* Connection Animation (Data Flow) - Desktop */}
-                    <div className="hidden sm:flex flex-col items-center justify-center w-16 h-32 relative">
-                        <div className="absolute w-full h-0.5 bg-slate-800 rounded-full top-1/2 -translate-y-1/2"></div>
+                    <div className={`hidden sm:flex flex-col items-center justify-center w-32 h-32 relative transition-opacity duration-1000 ease-in-out ${isInitialLoading ? 'opacity-0 delay-0' : 'opacity-100 delay-500'}`}>
+                        <div className="absolute w-full h-1 bg-slate-800 rounded-full top-1/2 -translate-y-1/2"></div>
                         <div className="absolute w-full h-full flex items-center overflow-hidden">
-                            <div className={`w-2 h-2 rounded-full ${currentStage.crmColor} bg-current shadow-[0_0_8px_currentColor] animate-data-flow absolute`}></div>
-                            <div className={`w-2 h-2 rounded-full ${currentStage.crmColor} bg-current shadow-[0_0_8px_currentColor] animate-data-flow absolute delay-300`}></div>
-                            <div className={`w-2 h-2 rounded-full ${currentStage.crmColor} bg-current shadow-[0_0_8px_currentColor] animate-data-flow absolute delay-700`}></div>
+                            <div className={`w-3.5 h-3.5 rounded-full ${currentStage.crmColor} bg-current shadow-[0_0_15px_currentColor] animate-data-flow absolute`}></div>
+                            <div className={`w-3.5 h-3.5 rounded-full ${currentStage.crmColor} bg-current shadow-[0_0_15px_currentColor] animate-data-flow absolute delay-300`}></div>
+                            <div className={`w-3.5 h-3.5 rounded-full ${currentStage.crmColor} bg-current shadow-[0_0_15px_currentColor] animate-data-flow absolute delay-700`}></div>
                         </div>
-                        <ArrowRight className="text-slate-600 relative z-10 bg-slate-950 px-1" size={24} />
+                        <ArrowRight className="text-slate-500 relative z-10 bg-slate-950 px-2" size={36} />
                     </div>
 
                     {/* Mobile Connection (Vertical) */}
-                    <div className="sm:hidden flex justify-center w-full py-4 relative">
-                        <div className="absolute h-full w-0.5 bg-slate-800 rounded-full left-1/2 -translate-x-1/2"></div>
-                        <ArrowRight className="text-slate-600 relative z-10 bg-slate-950 py-1 rotate-90" size={24} />
+                    <div className={`sm:hidden flex justify-center w-full py-8 relative transition-opacity duration-1000 ease-in-out ${isInitialLoading ? 'opacity-0 delay-0' : 'opacity-100 delay-500'}`}>
+                        <div className="absolute h-full w-1 bg-slate-800 rounded-full left-1/2 -translate-x-1/2"></div>
+                        <ArrowRight className="text-slate-500 relative z-10 bg-slate-950 py-2 rotate-90" size={36} />
                     </div>
 
-                    <CrmVisualizer activeStage={activeStage} stages={stages} />
+                    <div className={`w-full max-w-[280px] sm:max-w-none transition-opacity duration-1000 ease-in-out ${isInitialLoading ? 'opacity-0 delay-0' : 'opacity-100 delay-[1000ms]'}`}>
+                        <CrmVisualizer activeStage={activeStage} stages={stages} />
+                    </div>
                 </div>
             </div>
         </div>
