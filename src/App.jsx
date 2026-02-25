@@ -8,13 +8,13 @@ import CrmVisualizer from './components/CrmVisualizer';
 export default function App() {
     const [activeStage, setActiveStage] = useState(0);
     const [isAnimating, setIsAnimating] = useState(false);
-    const [preArrivalStep, setPreArrivalStep] = useState(0); // 0 = Login, 1 = Home
+    const [preArrivalStep, setPreArrivalStep] = useState(0); // 0 = Login, 1 = Home, 2 = Services
 
     // Auto-play feature for Main Stages
     useEffect(() => {
         const timer = setInterval(() => {
             handleStageChange((prev) => (prev + 1) % stages.length);
-        }, 8000); // Auto switch every 8 seconds
+        }, 12000); // Auto switch every 12 seconds
         return () => clearInterval(timer);
     }, []);
 
@@ -22,10 +22,18 @@ export default function App() {
     useEffect(() => {
         if (activeStage === 0) {
             setPreArrivalStep(0);
-            const timer = setTimeout(() => {
+            const timer1 = setTimeout(() => {
                 setPreArrivalStep(1);
             }, 3500); // Switch from Login to Home after 3.5s
-            return () => clearTimeout(timer);
+
+            const timer2 = setTimeout(() => {
+                setPreArrivalStep(2);
+            }, 7500); // Switch to Services after 7.5s
+
+            return () => {
+                clearTimeout(timer1);
+                clearTimeout(timer2);
+            };
         } else {
             setPreArrivalStep(0);
         }

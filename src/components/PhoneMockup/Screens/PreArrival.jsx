@@ -1,5 +1,6 @@
 import React from 'react';
 import BottomNav from '../BottomNav';
+import Services from './Services';
 
 export default function PreArrival({ active, step }) {
     return (
@@ -220,6 +221,9 @@ export default function PreArrival({ active, step }) {
                 </div>
                 <BottomNav />
             </div>
+
+            {/* SUB-STEP 2: SERVICES DIRECTORY SCREEN (Fades in) */}
+            <Services active={active} step={step} />
         </div>
     );
 }
