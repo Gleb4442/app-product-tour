@@ -46,10 +46,16 @@ export default function App() {
 
     // Initial Loading Timer
     useEffect(() => {
-        const timer = setTimeout(() => {
+        const handleLoad = () => {
             setIsInitialLoading(false);
-        }, 2500);
-        return () => clearTimeout(timer);
+        };
+
+        if (document.readyState === 'complete') {
+            handleLoad();
+        } else {
+            window.addEventListener('load', handleLoad);
+            return () => window.removeEventListener('load', handleLoad);
+        }
     }, []);
 
     const handleStageChange = (index) => {
@@ -92,23 +98,23 @@ export default function App() {
                     {/* Background decorative glow */}
                     <div className={`absolute inset-0 bg-indigo-500/5 blur-[100px] rounded-full pointer-events-none transition-opacity duration-1000 ease-in-out ${isInitialLoading ? 'opacity-0' : 'opacity-100'}`}></div>
 
-                    <PhoneMockup activeStage={activeStage} preArrivalStep={preArrivalStep} scale={1.2} isInitialLoading={isInitialLoading} />
+                    <PhoneMockup activeStage={activeStage} preArrivalStep={preArrivalStep} scale={1.5} isInitialLoading={isInitialLoading} />
 
                     {/* Connection Animation (Data Flow) - Desktop */}
-                    <div className={`hidden sm:flex flex-col items-center justify-center w-32 h-32 relative transition-opacity duration-1000 ease-in-out ${isInitialLoading ? 'opacity-0 delay-0' : 'opacity-100 delay-500'}`}>
-                        <div className="absolute w-full h-1 bg-slate-800 rounded-full top-1/2 -translate-y-1/2"></div>
+                    <div className={`hidden sm:flex flex-col items-center justify-center w-16 h-32 relative transition-opacity duration-1000 ease-in-out ${isInitialLoading ? 'opacity-0 delay-0' : 'opacity-100 delay-500'}`}>
+                        <div className="absolute w-full h-0.5 bg-slate-800 rounded-full top-1/2 -translate-y-1/2"></div>
                         <div className="absolute w-full h-full flex items-center overflow-hidden">
-                            <div className={`w-3.5 h-3.5 rounded-full ${currentStage.crmColor} bg-current shadow-[0_0_15px_currentColor] animate-data-flow absolute`}></div>
-                            <div className={`w-3.5 h-3.5 rounded-full ${currentStage.crmColor} bg-current shadow-[0_0_15px_currentColor] animate-data-flow absolute delay-300`}></div>
-                            <div className={`w-3.5 h-3.5 rounded-full ${currentStage.crmColor} bg-current shadow-[0_0_15px_currentColor] animate-data-flow absolute delay-700`}></div>
+                            <div className={`w-2 h-2 rounded-full ${currentStage.crmColor} bg-current shadow-[0_0_8px_currentColor] animate-data-flow absolute`}></div>
+                            <div className={`w-2 h-2 rounded-full ${currentStage.crmColor} bg-current shadow-[0_0_8px_currentColor] animate-data-flow absolute delay-300`}></div>
+                            <div className={`w-2 h-2 rounded-full ${currentStage.crmColor} bg-current shadow-[0_0_8px_currentColor] animate-data-flow absolute delay-700`}></div>
                         </div>
-                        <ArrowRight className="text-slate-500 relative z-10 bg-slate-950 px-2" size={36} />
+                        <ArrowRight className="text-slate-600 relative z-10 bg-slate-950 px-1" size={24} />
                     </div>
 
                     {/* Mobile Connection (Vertical) */}
-                    <div className={`sm:hidden flex justify-center w-full py-8 relative transition-opacity duration-1000 ease-in-out ${isInitialLoading ? 'opacity-0 delay-0' : 'opacity-100 delay-500'}`}>
-                        <div className="absolute h-full w-1 bg-slate-800 rounded-full left-1/2 -translate-x-1/2"></div>
-                        <ArrowRight className="text-slate-500 relative z-10 bg-slate-950 py-2 rotate-90" size={36} />
+                    <div className={`sm:hidden flex justify-center w-full py-4 relative transition-opacity duration-1000 ease-in-out ${isInitialLoading ? 'opacity-0 delay-0' : 'opacity-100 delay-500'}`}>
+                        <div className="absolute h-full w-0.5 bg-slate-800 rounded-full left-1/2 -translate-x-1/2"></div>
+                        <ArrowRight className="text-slate-600 relative z-10 bg-slate-950 py-1 rotate-90" size={24} />
                     </div>
 
                     <div className={`w-full max-w-[280px] sm:max-w-none transition-opacity duration-1000 ease-in-out ${isInitialLoading ? 'opacity-0 delay-0' : 'opacity-100 delay-[1000ms]'}`}>
